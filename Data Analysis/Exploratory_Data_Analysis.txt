@@ -1,0 +1,61 @@
+# Exploratory Data Analysis Steps -
+1. Descriptive Statistics
+2. Group By
+3. ANOVA
+4. Correlation
+5. Correlation - Statistics
+
+# Descriptive Statistics
+1. Summarize statistics using pandas describe()
+df.describe()
+
+2. Summarize the categorical data is by using the value_counts() method
+drive_wheels_counts = df["drive-wheels"].value_counts()
+drive_wheels_counts.rename(columns = {"drive-wheels" : "value_counts"}, inplace = True)
+drive_wheels_counts.index.name = "drive-wheels"
+
+3. Box Plots ()
+sns.boxplot(x = "drive-wheels", y = "price", data = df)
+
+4. Scatter Plots (matplotlib)
+y = df["price"]
+x = df["engine-size"]
+
+plt.scatter(x, y)
+
+plt.title("Scatterplot of Engine Size vs Price")
+plt.xlabel("Engine Size")
+plt.ylabel("Price")
+
+# Group By
+df.groupby()
+df_test = df[["drive-wheels", "body-style", "price"]]
+df_grp = df_test.group_by(["drive-wheels", "body-style"], as_index = False).mean()
+** To vizualize this df_grp we can use Pivot()
+df_pivot = df_grp.pivot(index = "drive-wheels", columns = "body-style")
+** Another one is Heatmap
+plt.pcolor(df_pivot, cmap = "RdBu")
+plt.colorbar()
+plt.show()
+
+# Correlation
+sns.regplot(x="engine-size", y="price", data = df)
+plt.ylim(0,)
+
+# Correlation Statictics
+1. Pearson Correlation
+    a. Correlation coefficient -
+        i.      close to +1: Large positive relationship
+        ii.     close to -1: Large Negative relationship
+        iii.    close to 0: No relationship
+    b. P value -
+        i.      P-value < 0.001 Strong certainty in the result
+        ii.     P-value < 0.05 Moderate certainty in the result
+        iii.    P-value < 0.1 Weak certainty in the result
+        iv.     P-value > 0.1 No certainty in the result
+
+    (*) To check if the data is in Strong Correlation -
+        i.      Correlation coefficient close to 1 or -1
+        ii.     P-value less than 0.001
+
+    pearson_coef, p_value = stats.pearsonr(df['horsepower'], df['price'])

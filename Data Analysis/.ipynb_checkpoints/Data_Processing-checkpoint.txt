@@ -1,0 +1,49 @@
+# Data processing rules -
+1. Identify and handle missing values
+2. Data Formatting
+3. Data Normalization (centering / scaling)
+4. Data Binning
+5. Turning Categorical to numerical variables
+
+# Deal with missing data
+1. Drop the missing values
+    a. drop the variable
+    b. drop the data entry
+2. Replace the missing values
+    a. replace it with an average (of similar datapoints)
+    b. replace it by frequency
+    c. replace it based on other functions
+3. Leave as it is
+
+# How to drop missing values -
+df.dropna() // axis = 0 (for entire row), axis = 1 (for entire column)
+df.dropna(subset=["price"], axis=0, inplace = True)
+
+# How to replace missing values -
+df.replace(missing_value, new_value)
+mean = df["normalized-losses"].mean()
+df["normalized-losses"].replace(np.nan, mean)
+
+# Data Formatting -
+df ["city-mpg"] = 235 / df["city-mpg"]
+df.rename(columns = {"city-mpg": "city-L/100km"}, inplace = True)
+
+df["price"] = df["price"].astype("int") // convert data types
+
+# Data Normalization
+1. Simple Feature Scaling
+df["length"] = df["length"] / df["length"].max()
+
+2. Min-max
+df["length"] = (df["length"] - df["length"].min()) / (df["length"].max() - df["length"].min())
+
+3. Z-score
+df["length"] = (df["length"] - df["length"].mean()) / df["length"].std()
+
+# Binning
+bins = np.linspace(min(df["price"]), max(df["price"]), 4)
+group_names = ["Low", "Medium", "High"]
+df["price-binned"] = pd.cut(df["price"], bins, lables=group_names, include_lowest = True)
+
+# Turning Categorical to numerical variables
+pd.get_dummies(df["fuel"])

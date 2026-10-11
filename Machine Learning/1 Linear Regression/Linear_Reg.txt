@@ -1,0 +1,73 @@
+1. Simple Linear Regression
+
+from sklearn.linear_model import LinearRegression
+lm = LinearRegression()
+x = df[['highway-mpg']]
+y = df[['price']]
+
+lm.fit(x, y)
+yhat = lm.predict(x)
+lm.intercept_
+lm.coef_
+
+2. Multiple Linear Regression
+z = df[['horsepower', 'curb-weight', 'engine-size', 'highway-mpg']]
+lm.fit(z, df['price'])
+yhat = lm.predict(x)
+
+3. Visualization
+import seaborn as sns
+sns.regplot(x = "highway-mpg", y = "price", data=df)
+plt.ylim(0,)
+
+* Residual Plot Key points -
+i. if the plot is scatter then the predicted function is good because it covers all data points
+ii. if the plot is U shaped or funnel like structure then the function is not good
+
+import seaborn as sns
+sns.residplot(df['highway-mpg'], df['price'])
+
+* Distribution Plot Key points -
+we can check between actual value and predicted value.
+
+import seaborn as sns
+ax1 = sns.kdeplot(data=df['price'], color="r", label = "Actual Value")
+sns.kdeplot(data=yhat, color="b", label="Fitted Values", ax = ax1)
+
+4. Polynomial Regression and Pipelines
+f = np.polyfit(x, y, 3)
+p = np.poly1d(f)
+print(p)
+
+from sklearn.preprocessing import PolynomialFeatures
+pr = PolynomialFeatures(degree=2, include_bias=False)
+x_polly = pr.fit_transform(x[["horsepower", "curb-weight"]])
+
+// For Normalization we can use this
+for sklearn.preprocessing import StandardScaler
+SCALE = StandardScaler()
+SCALE.fit(x_data[["horsepower", "highway-mpg"]])
+x_scale = SCALE.transform(x_data[["horsepower", "highway-mpg"]])
+
+// Pipeline
+normalization -> polynomial transform -> linear regression
+first 2 step is transformation and last is model prediction. we can easily do this by pipeline
+
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import StandardScaler
+
+input = [("polynomial", PolynomialFeature(degree = 2)), ("scale", StandardScaler()), ... ("Model", LinearRegression())]
+pipe = Pipeline
+
+pipe.fit(df[["horsepower", "curb-weight", "engine-size", "highway-mpg"]], y)
+yhat = pipe.predict(x[["horsepower", "curb-weight", "engine-size", "highway-mpg"]])
+
+// stpes
+x -> normalization -> polynomial transform -> linear regression -> y
+
+// KDE plots is the graph plot for actual vs estemated data density so that we can understand how model performs on test data
+
+5. In-Sample Evaluation
+i. A way to numerically determine how good our model fits on dataset
+ii. Two important measures to determine the fits of a model - MSE (Mean squared error), R-squared (R^2)
