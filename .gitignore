@@ -1,2 +1,4 @@
-.idea
+.idea/
 .venv
+*.log
+Deep Learning/10 Data Augmentation/datasets/
